@@ -89,33 +89,12 @@
     window.addEventListener('load', centre);
   }
 
-  /* ---------- image reveals ---------- */
-  const reveals = document.querySelectorAll('.reveal');
-  if (reduceMotion || !('IntersectionObserver' in window)) {
-    reveals.forEach((el) => el.classList.add('is-in'));
-  } else {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
-      });
-    }, { threshold: 0.2 });
-    reveals.forEach((el) => io.observe(el));
-  }
-
   /* ---------- drawing / night comparison ---------- */
+  // scroll moves the line (see scroll.js); the slider still works from the keyboard
   const compare = document.querySelector('[data-compare]');
   if (compare) {
     const range = compare.querySelector('.compare-range');
-    const set = (v) => compare.style.setProperty('--pos', `${v}%`);
-    range.addEventListener('input', () => set(range.value));
-    // follow the pointer while it is over the frame, without needing a click
-    compare.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      const r = compare.getBoundingClientRect();
-      const v = Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100));
-      range.value = v;
-      set(v.toFixed(2));
-    });
+    range.addEventListener('input', () => compare.style.setProperty('--pos', `${range.value}%`));
   }
 
   /* ---------- work index ---------- */

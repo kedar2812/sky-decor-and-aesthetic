@@ -42,6 +42,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+main { overflow-x: clip; }
 img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -259,8 +260,6 @@ ul, ol { padding: 0; list-style: none; }
 .arch { overflow: hidden; border-radius: 1000px 1000px 0 0; background: var(--sand); }
 .arch img { width: 100%; height: 100%; object-fit: cover; }
 
-.reveal img { clip-path: inset(100% 0 0 0); transform: scale(1.06); transition: clip-path 1.5s var(--ease), transform 2s var(--ease); }
-.reveal.is-in img { clip-path: inset(0); transform: none; }
 
 /* ==========================================================
    A letter from Sumit
@@ -310,6 +309,8 @@ ul, ol { padding: 0; list-style: none; }
 .compare {
   --pos: 50%;
   position: relative; aspect-ratio: 1400 / 933; overflow: hidden; background: var(--forest-deep);
+  /* fits the viewport so it can be held in place while the drawing turns into the night */
+  width: min(100%, calc((100vh - 150px) * 1400 / 933)); margin-inline: auto;
   user-select: none; touch-action: pan-y;
 }
 .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -336,11 +337,16 @@ ul, ol { padding: 0; list-style: none; }
 .compare:has(.compare-range:focus-visible) { outline: 1px solid var(--gold); outline-offset: 6px; }
 
 .crafts {
-  display: grid; grid-template-columns: 1fr 1fr;
+  --grow: 1;
+  position: relative; display: grid; grid-template-columns: 1fr 1fr;
   margin-top: clamp(60px, 8vw, 100px);
 }
+.crafts::before {
+  content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--gold);
+  opacity: .5; transform: scaleY(var(--grow)); transform-origin: top;
+}
 .craft-col { padding-right: clamp(30px, 5vw, 80px); }
-.craft-col + .craft-col { padding-right: 0; padding-left: clamp(30px, 5vw, 80px); border-left: 1px solid var(--rule); }
+.craft-col + .craft-col { padding-right: 0; padding-left: clamp(30px, 5vw, 80px); }
 .craft-icon { width: 54px; height: 54px; margin-bottom: 24px; fill: none; stroke: var(--gold); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 .craft-col h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 1.3rem + 1vw, 2.3rem); line-height: 1.15; color: var(--ivory); margin-bottom: 16px; }
 .craft-col p { color: rgba(247, 246, 242, .72); max-width: 50ch; font-size: .95rem; }
@@ -579,6 +585,7 @@ ul, ol { padding: 0; list-style: none; }
 @media (max-width: 860px) {
   .letter-grid, .craft-head, .crafts, .work-grid, .timeline-head, .contact-grid, .footer-top, .words { grid-template-columns: 1fr; }
   .letter-photo { margin-top: 0; max-width: 440px; }
+  .crafts::before { display: none; }
   .craft-col, .craft-col + .craft-col { padding: 0; border: 0; }
   .craft-col + .craft-col { margin-top: 56px; padding-top: 56px; border-top: 1px solid var(--rule); }
   .work-view { position: relative; top: 0; order: -1; aspect-ratio: 4 / 3; border-radius: 0; }
